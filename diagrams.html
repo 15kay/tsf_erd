@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System Diagrams | Thobela SF</title>
+  <style>
+    /* Basic reset and fonts */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f0f2f5;
+    }
+    /* Sidebar styling */
+    .sidebar {
+      width: 280px;
+      background-color: #1e293b;
+      color: white;
+      padding: 30px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar h2 {
+      margin: 0 0 30px 0;
+      font-size: 24px;
+      text-align: center;
+    }
+    .sidebar a {
+      color: #cbd5e1;
+      text-decoration: none;
+      margin: 12px 0;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+    /* Main content styling */
+    main {
+      flex-grow: 1;
+      padding: 20px;
+      overflow: auto;
+      background: white;
+      box-shadow: inset 0 0 10px rgb(0 0 0 / 0.1);
+    }
+    
+    #svg-container svg,
+    #svg-container img {
+      max-width: 100%;
+      max-height: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    }
+    #svg-container {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Landscape ratio */
+  max-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+}
+
+#svg-container svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+  display: block;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>💻 Thobela SF</h2>
+    <a href="#" data-src="assets/Smart ERD (Entity Relationship Diagram).svg" class="active">ERD Diagram</a>
+    <a href="#" data-src="assets/System use cases.svg">System Use Case</a>
+    <a href="#" data-src="assets/Driver...svg">Driver Flowchart</a>
+    <a href="#" data-src="assets/Vendors.svg">Vendors Flowchart</a>
+    <a href="#" data-src="assets/POLICY.svg">Policy Flowchart</a>
+    <a href="#" data-src="assets/Youth Trainee Flowchart.svg">Youth Trainee Flowchart</a>
+  </div>
+
+  <main>
+    <div id="svg-container">
+      <!-- SVG will load here -->
+      <p style="color:#888; font-size: 18px;">Loading diagram...</p>
+    </div>
+  </main>
+
+  <script>
+    // Grab sidebar links and container
+    const links = document.querySelectorAll('.sidebar a');
+    const container = document.getElementById('svg-container');
+
+    // Function to load SVG into container
+    async function loadSVG(url) {
+      try {
+        container.innerHTML = '<p style="color:#888; font-size: 18px;">Loading diagram...</p>';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to load SVG');
+        const svgText = await res.text();
+        container.innerHTML = svgText;
+      } catch (err) {
+        container.innerHTML = `<p style="color: red;">Error loading diagram: ${err.message}</p>`;
+      }
+    }
+
+    // On link click load SVG & highlight active link
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        const src = link.getAttribute('data-src');
+        loadSVG(src);
+      });
+    });
+
+    // Load the first SVG by default on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const firstSrc = links[0].getAttribute('data-src');
+      loadSVG(firstSrc);
+    });
+  </script>
+
+</body>
+</html>
